@@ -1,0 +1,39 @@
+1) Dar los permisos desde gisum con el archivo http://svn-cv1.corp.cablevision.com.ar/OMI-InvdeRed/OMI-InvdeRed/Proyectos/Modelo Unificado/05 Codigo/trunk/GISUM/object_grant/A001806_GRANT_API_GEOGRAPHIC_ADDRESS.sql
+
+2) Crear la tabla Area \tables\area.sql 
+3) Crear la pk de Area \constraints\area_pk.sql
+4) Crear el indice sobre Area \indexes\area_idx1.sql
+
+5) Crear sinonimos \synonyms.sql\synonyms.sql
+6) Crear los tipos  \types\TT_AREA.sql
+7) Crear el paquete \packages\import_area.sql
+8) Crear el paquete \packages\api_area_dml.sql
+
+9) Ejecutar la migracion de area
+
+Ejecutar los siguientes queries para saber la cantidad de datos
+select count(1) from gisum_area; --da 158.323 (test)
+select count(1) from area; --da 0
+
+Ejecutar la importacion, tarda 10 segundos en test
+
+begin
+    IMPORT_AREA.import;
+end;
+/
+
+
+Comprobar la importacion
+select count(1) from gisum_area; --da 158.323 (test)
+select count(1) from area; --da 158.318 (test)
+
+Si hay diferencias ejecutar
+
+select id_area from gisum_area
+minus
+select id_area from area;
+
+Pueden estar las area con id -1 y 0, y otras areas como partidos que no tienen asignado el alias para saber a que provincias saben.
+
+
+
